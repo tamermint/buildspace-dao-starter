@@ -1,4 +1,6 @@
-import { useAddress, ConnectWallet, Web3Button, useContract, useNFTBalance } from '@thirdweb-dev/react';
+
+import { useAddress, useNetwork, ConnectWallet, Web3Button, useContract, useNFTBalance } from '@thirdweb-dev/react';
+import { ChainId } from '@thirdweb-dev/sdk';
 import { useState, useEffect, useMemo } from 'react';
 import { AddressZero } from "@ethersproject/constants";
 
@@ -6,6 +8,7 @@ const App = () => {
   // Use the hooks thirdweb give us.
   const address = useAddress();
   console.log("👋 Address:", address);
+  const network = useNetwork();
   // Initialize our Edition Drop contract
   const editionDropAddress = "0x09Fe10535f40d339629441C974C81BfBA129B255";
   const { contract: editionDrop } = useContract(editionDropAddress, "edition-drop");
@@ -135,6 +138,18 @@ const memberList = useMemo(() => {
   });
 }, [memberAddresses, memberTokenAmounts]);
 
+if (address && (network?.[0].data.chain.id !== ChainId.Goerli)) {
+  return (
+    <div className="unsupported-network">
+      <h2>Please connect to Goerli</h2>
+      <p>
+        This dapp only works on the Goerli network, please switch networks
+        in your connected wallet.
+      </p>
+    </div>
+  );
+}
+
   // This is the case where the user hasn't connected their wallet
   // to your web app. Let them call connectWallet.
   if (!address) {
@@ -151,8 +166,8 @@ const memberList = useMemo(() => {
   if (hasClaimedNFT) {
     return (
       <div className="member-page">
-        <h1>🍪DAO Member Page</h1>
-        <p>Congratulations on being a member</p>
+        <h1>🔥DAO Member Page🔥</h1>
+        <p>Helheim Awaits!</p>
         <div>
           <div>
             <h2>Member List</h2>
